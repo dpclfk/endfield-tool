@@ -10,7 +10,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Region } from './region';
+import { Region } from './region.entity';
 
 @Entity({ name: 'regional_product' })
 export class RegionalProduct {
@@ -23,7 +23,7 @@ export class RegionalProduct {
   @Column({ nullable: false, type: 'int', unsigned: true })
   price: number; //
 
-  @ManyToOne(() => Region) // OneToMany 생략가능해서 생략
+  @ManyToOne(() => Region, { onDelete: 'CASCADE' }) // OneToMany 생략가능해서 생략
   @JoinColumn({ name: 'region_id' })
   region: Region;
 

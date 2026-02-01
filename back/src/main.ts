@@ -3,6 +3,9 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import { HttpExceptionFilter } from './filter/http-exception/http-exception.filter';
+import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
+import { TypeErrFilter } from './filter/type-err/type-err.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -14,6 +17,13 @@ async function bootstrap() {
   app.use(cookieParser(process.env.COOKIE_SECRET));
 
   app.setGlobalPrefix('api');
+
+  // 에러 필터 관련
+  app.useGlobalFilters(
+    new HttpExceptionFilter(),
+    new MysqlErrFilter(),
+    new TypeErrFilter(),
+  );
 
   // swagger 관련
   const options = new DocumentBuilder()
@@ -33,7 +43,7 @@ async function bootstrap() {
     )
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('apiDocs', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
   app.enableCors({
     origin: 'http://localhost:3807',
