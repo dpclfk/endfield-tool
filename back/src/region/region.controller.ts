@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { RegionService } from './region.service';
 import { CreateRegionDto } from './dto/create-region.dto';
@@ -22,12 +24,12 @@ import {
   RegionCreateResponseDto,
   RegionDeleteManyOkResponseDto,
   RegionDeleteOkResponseDto,
-  RegionDuplicateResponseDto,
   RegionFindAllResponseDto,
   RegionNotFoundResponseDto,
   RegionUpdateOkResponseDto,
-} from './dto/region-response.dto';
-import { RegionRemoveManyDto } from './dto/region-remove-many.dto';
+} from './dto/response-region.dto';
+import { RegionRemoveManyDto } from './dto/remove-many-region.dto';
+import { MysqlErrResponseDto } from 'src/filter/mysql-err/mysql-err-response';
 
 @Controller('region')
 export class RegionController {
@@ -42,8 +44,11 @@ export class RegionController {
     type: RegionCreateResponseDto,
   })
   @ApiBadRequestResponse({
-    description: '지역명 중복으로인해 수정에 실패한 경우입니다.',
-    type: RegionDuplicateResponseDto,
+    description: `
+    상황에 따라 메시지가 다릅니다.
+    - 중복된 값인 경우: "무릉은(는) 이미 존재하는 값입니다."
+    - 필수값이 누락된 경우: "name 값을 입력해주세요."`,
+    type: MysqlErrResponseDto,
   })
   @Post()
   create(
@@ -51,6 +56,11 @@ export class RegionController {
   ): Promise<RegionCreateResponseDto> {
     return this.regionService.create(createRegionDto);
   }
+
+  @ApiOperation({
+    summary: '모든 지역을 보여줍니다.',
+    description: '모든 지역을 보여줍니다.',
+  })
   @ApiOkResponse({
     description: '모든 지역 입니다.',
     type: [RegionFindAllResponseDto],
@@ -69,8 +79,11 @@ export class RegionController {
     type: RegionUpdateOkResponseDto,
   })
   @ApiBadRequestResponse({
-    description: '지역명 중복으로인해 수정에 실패한 경우입니다.',
-    type: RegionDuplicateResponseDto,
+    description: `
+    상황에 따라 메시지가 다릅니다.
+    - 중복된 값인 경우: "무릉은(는) 이미 존재하는 값입니다."
+    - 필수값이 누락된 경우: "name 값을 입력해주세요."`,
+    type: MysqlErrResponseDto,
   })
   @ApiNotFoundResponse({
     description: '해당하는 번호의 지역을 찾을 수 없는 경우입니다.',
@@ -110,10 +123,11 @@ export class RegionController {
     type: RegionDeleteManyOkResponseDto,
   })
   @ApiNotFoundResponse({
-    description: '지역삭제가 0개가 된 경우입니다.',
+    description: '지역 삭제가 0개가 된 경우입니다.',
     type: RegionNotFoundResponseDto,
   })
   @Post('delete')
+  @HttpCode(HttpStatus.OK)
   removeMany(@Body() ids: RegionRemoveManyDto) {
     return this.regionService.removeMany(ids);
   }

@@ -6,9 +6,9 @@ import {
 import { CreateRegionDto } from './dto/create-region.dto';
 import { UpdateRegionDto } from './dto/update-region.dto';
 import { Region } from 'src/entities/region.entity';
-import { QueryFailedError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegionRemoveManyDto } from './dto/region-remove-many.dto';
+import { RegionRemoveManyDto } from './dto/remove-many-region.dto';
 
 @Injectable()
 export class RegionService {
@@ -18,24 +18,10 @@ export class RegionService {
   ) {}
 
   async create(createRegionDto: CreateRegionDto) {
-    try {
-      const regionSave: Region = this.regionRepository.create({
-        name: createRegionDto.name,
-      });
-      await this.regionRepository.save(regionSave);
-    } catch (err) {
-      if (
-        // 중복된 지역일경우, mysql필터 안거치고 메시지를 프론트에서 수정 가능하게함
-        err instanceof QueryFailedError &&
-        err.message.includes('Duplicate entry')
-      ) {
-        throw new BadRequestException({
-          status: 'fail',
-          message: '이미 존재하는 지역명입니다.',
-        });
-      }
-      throw err; // 중복된 지역 추가에러 외에는 그대로 내보내게
-    }
+    const regionSave: Region = this.regionRepository.create({
+      name: createRegionDto.name,
+    });
+    await this.regionRepository.save(regionSave);
     return { status: 'success', message: '지역 추가에 성공하였습니다.' };
   }
 
@@ -49,27 +35,16 @@ export class RegionService {
   }
 
   async update(id: number, updateRegionDto: UpdateRegionDto) {
-    try {
-      const result = await this.regionRepository.update(id, updateRegionDto);
-      if (result.affected === 0) {
-        throw new NotFoundException({
-          status: 'fail',
-          message: '지역을 찾을 수 없습니다.',
-        });
-      }
-    } catch (err) {
-      if (
-        // 중복된 지역일경우, mysql필터 안거치고 메시지를 프론트에서 수정 가능하게함
-        err instanceof QueryFailedError &&
-        err.message.includes('Duplicate entry')
-      ) {
-        throw new BadRequestException({
-          status: 'fail',
-          message: '이미 존재하는 지역명입니다.',
-        });
-      }
-      throw err; // 여기서 설정한 에러 외에는 그대로 내보냄
+    const result = await this.regionRepository.update(id, {
+      name: updateRegionDto.name,
+    });
+    if (result.affected === 0) {
+      throw new NotFoundException({
+        status: 'fail',
+        message: '지역을 찾을 수 없습니다.',
+      });
     }
+
     return { status: 'success', message: '지역 수정에 성공하였습니다.' };
   }
 

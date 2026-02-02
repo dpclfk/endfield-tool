@@ -12,6 +12,7 @@ import { ProductionType } from './entities/production-type.entity';
 import { Region } from './entities/region.entity';
 import { RegionalProduct } from './entities/regional-product.entity';
 import { RegionModule } from './region/region.module';
+import { RegionalProductModule } from './regional-product/regional-product.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { RegionModule } from './region/region.module';
       RegionalProduct,
     ]),
     RegionModule,
+    RegionalProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],

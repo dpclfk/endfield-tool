@@ -15,20 +15,6 @@ export class RegionCreateResponseDto {
   message: string;
 }
 
-export class RegionDuplicateResponseDto {
-  @ApiProperty({
-    description: '지역추가 실패',
-    example: 'fail',
-  })
-  status: string;
-
-  @ApiProperty({
-    description: '상세 메시지',
-    example: '이미 존재하는 지역명입니다.',
-  })
-  message: string;
-}
-
 export class RegionFindAllResponseDto {
   @ApiProperty({
     description: '지역 조회 성공',
