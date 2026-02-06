@@ -6,8 +6,8 @@ export type TradeItem = {
 };
 
 export type RegionalTradeData = {
-  buy: TradeItem;
-  sell: TradeItem[];
+  sell: TradeItem;
+  buy: TradeItem[];
 };
 
 export type StorageData = Record<number, RegionalTradeData>;

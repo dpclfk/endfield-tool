@@ -7,6 +7,7 @@ export type RegionalProductList = {
 };
 
 export type Region = {
+  region_id: number;
   region_name: string;
   regional_product_list: RegionalProductList[];
 };

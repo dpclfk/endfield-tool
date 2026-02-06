@@ -36,6 +36,12 @@ export class regionalProductList {
 
 export class RegionalProduct {
   @ApiProperty({
+    description: '지역번호입니다.',
+    example: '1',
+  })
+  region_id: number;
+
+  @ApiProperty({
     description: '지역명입니다.',
     example: '무릉',
   })

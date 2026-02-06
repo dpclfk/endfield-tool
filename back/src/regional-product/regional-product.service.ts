@@ -32,10 +32,15 @@ export class RegionalProductService {
   async findAll() {
     const result = await this.regionRepository
       .createQueryBuilder('r')
-      .select('r.name', 'region_name')
+      .select('r.id', 'region_id')
+      .addSelect('r.name', 'region_name')
       .addSelect(
         `JSON_ARRAYAGG(
-          JSON_OBJECT('id', rp.id, 'regional_product_name', rp.name,'price', rp.price)
+          JSON_OBJECT(
+          'id', rp.id,
+          'regional_product_name', rp.name,
+          'price', rp.price
+          )
         )`,
         'regional_product_list',
       )

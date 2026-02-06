@@ -78,6 +78,7 @@ export class RegionalProductController {
   findAll() {
     return this.regionalProductService.findAll();
   }
+
   @ApiOperation({
     summary: '지역 변동물자를 수정합니다.',
     description: '지역 변동물자를 수정합니다.',
