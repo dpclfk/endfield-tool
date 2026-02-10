@@ -20,10 +20,12 @@ import { AdminGuard } from './admin.guard';
 import {
   ApiBearerAuth,
   ApiCookieAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { resLoginDto } from './dto/res-auth.dto';
+import { AuthSuccessResponseDto, resLoginDto } from './dto/res-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -68,12 +70,9 @@ export class AuthController {
     description:
       '아이디는 이메일 형식이면가능, 비밀번호는 8자이상 60자 이하, 닉네임은 2자이상 20자 이하 특수문자 불가능',
   })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      type: 'string',
-      example: '회원가입 완료',
-    },
+  @ApiCreatedResponse({
+    description: '회원가입이 성공한 경우입니다.',
+    type: AuthSuccessResponseDto,
   })
   @Post('/register')
   async register(@Body() registerDto: RegisterDto) {
@@ -86,19 +85,19 @@ export class AuthController {
     summary: '어드민 권한 부여',
     description: '닉네임은 2자이상 20자 이하',
   })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      type: 'string',
-      example: '어드민 권한 부여 완료',
-    },
+  @ApiOkResponse({
+    description: '어드민 권한 부여가 성공한 경우입니다.',
+    type: AuthSuccessResponseDto,
   })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch('/admin')
   async adminAuth(@Body() adminDto: AdminDto) {
     await this.authService.adminAuth(adminDto);
-    return '어드민 권한 부여 완료';
+    return {
+      status: 'success',
+      message: '어드민권한이 부여되었습니다.',
+    };
   }
 
   // 특정유저에 어드민 권한 제거
@@ -107,23 +106,24 @@ export class AuthController {
     summary: '어드민 권한 제거',
     description: '닉네임은 2자이상 20자 이하',
   })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      type: 'string',
-      example: '어드민 권한 제거 완료',
-    },
+  @ApiOkResponse({
+    description: '어드민 권한 제거가 성공한 경우입니다.',
+    type: AuthSuccessResponseDto,
   })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch('/admin-remove')
   async adminRemove(@Body() adminDto: AdminDto) {
     await this.authService.adminRemove(adminDto);
-    return '어드민 권한 제거 완료';
+    return {
+      status: 'success',
+      message: '어드민권한이 제거되었습니다.',
+    };
   }
 
   // 가드에 막히면 여기서 리프레시 토큰 확인
   // jwtguard에서 막힐거라 가드 없음
+  // 가드사용시 jwt는 이미 만료된상태라 재발급이 안됨
   @ApiOperation({
     summary: '엑세스토큰 만료시 재발급',
     description:
@@ -148,12 +148,9 @@ export class AuthController {
     description:
       '쿠키에 저장되어있는 리프레시토큰 삭제, 쿠키값 사용하니 with credentials 설정 필요',
   })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      type: 'string',
-      example: '로그아웃 완료',
-    },
+  @ApiOkResponse({
+    description: '로그아웃이 완료된 경우입니다.',
+    type: AuthSuccessResponseDto,
   })
   @Delete('/logout')
   async logout(
@@ -171,24 +168,27 @@ export class AuthController {
       sameSite: 'none',
       path: '/api/auth',
     });
-    return '로그아웃 완료';
+    return {
+      status: 'success',
+      message: '로그아웃이 완료 되었습니다.',
+    };
   }
 
   @ApiOperation({
     summary: '어드민 확인',
     description: '로그인 되어있는 사람이 어드민인지 확인합니다.',
   })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      type: 'string',
-      example: '어드민 입니다.',
-    },
+  @ApiOkResponse({
+    description: '현재 로그인된 유저가 어드민인지 확인합니다.',
+    type: AuthSuccessResponseDto,
   })
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('/admin')
   async adminCheck() {
-    return '어드민 입니다.';
+    return {
+      status: 'success',
+      message: '어드민 입니다.',
+    };
   }
 }

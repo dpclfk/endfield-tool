@@ -7,6 +7,7 @@ import { HttpExceptionFilter } from './filter/http-exception/http-exception.filt
 import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 import { TypeErrFilter } from './filter/type-err/type-err.filter';
 import { ValidationPipe } from '@nestjs/common';
+import { JwtErrFilter } from './filter/jwt-err/jwt-err.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -34,6 +35,7 @@ async function bootstrap() {
   app.useGlobalFilters(
     new HttpExceptionFilter(),
     new MysqlErrFilter(),
+    new JwtErrFilter(),
     new TypeErrFilter(),
   );
 

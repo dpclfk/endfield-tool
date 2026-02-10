@@ -14,14 +14,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const errMessage = exception.getResponse() as {
       message: string | string[];
       error: string;
-      status: string;
+      statusCode: string;
     };
     console.error(errMessage.message);
     if (Array.isArray(errMessage.message)) {
       errMessage.message = errMessage.message[0];
     }
     response.status(exception.getStatus()).json({
-      status: errMessage.status,
+      status: 'fail',
       message: errMessage.message,
     });
   }

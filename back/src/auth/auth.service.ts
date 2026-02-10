@@ -64,7 +64,10 @@ export class AuthService {
   async register(registerDto: RegisterDto) {
     registerDto.password = await this.hassPassword(registerDto.password);
     await this.usersService.register(registerDto);
-    return '회원가입 완료';
+    return {
+      status: 'success',
+      message: '회원가입이 완료 되었습니다.',
+    };
   }
 
   async adminAuth(adminDto: AdminDto) {

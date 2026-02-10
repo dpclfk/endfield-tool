@@ -44,7 +44,7 @@ export class MysqlErrFilter implements ExceptionFilter {
         'Cannot add or update a child row: a foreign key constraint fails',
         (msg: string) => {
           const field = msg.match(/FOREIGN KEY \(`([^`]+)`/)?.[1] || '';
-          const table = msg.match(/REFERENCES `([^`]+)`/)?.[1] || '';
+          // const table = msg.match(/REFERENCES `([^`]+)`/)?.[1] || '';
           statusCode = 404;
           return `연결하려는 부모 데이터가 존재하지 않습니다. ${camelcase(field)} 값을 확인해주세요.`;
         },
