@@ -1,3 +1,5 @@
+"use server";
+
 import serverbase from "./server";
 
 export type RegionalProductList = {

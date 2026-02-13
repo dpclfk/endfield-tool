@@ -1,3 +1,5 @@
+"use server";
+
 import ky from "ky";
 
 const serverbase = ky.create({
@@ -10,6 +12,14 @@ const serverbase = ky.create({
       (request) => {
         // Axios 인터셉터와 유사한 기능
         request.headers.set("Authorization", "Bearer token");
+      },
+    ],
+    afterResponse: [
+      async (request, options, response) => {
+        if (!response.ok) {
+          const errorData: { status: string; message: string } =
+            (await response.json()) as { status: string; message: string };
+        }
       },
     ],
   },

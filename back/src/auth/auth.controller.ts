@@ -60,7 +60,10 @@ export class AuthController {
       path: '/api/auth',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });
-    return { access_token: access_token };
+    return {
+      status: 'success',
+      access_token: access_token,
+    };
   }
 
   // 회원가입
@@ -138,7 +141,10 @@ export class AuthController {
   async refresh(@Request() req: ExpressRequest) {
     const refresh_token: string = req.cookies['refresh_token']; // 쿠키에서 리프레시 토큰 가져오기
     const access_token = await this.authService.refresh(refresh_token);
-    return { access_token: access_token };
+    return {
+      status: 'success',
+      access_token: access_token,
+    };
   }
 
   // 리프레시 토큰만 삭제

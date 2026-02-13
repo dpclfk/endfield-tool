@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class resLoginDto {
+  @ApiProperty({
+    example: 'success',
+  })
+  status: string;
+
   @ApiProperty()
   access_token: string;
 }

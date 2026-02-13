@@ -1,5 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class LocalAuthGuard extends AuthGuard('local') {}
+export class LocalAuthGuard extends AuthGuard('local') {
+  handleRequest(err: any, user: any, info: any, context: any, status: any) {
+    if (err || !user) {
+      throw new UnauthorizedException(
+        '이메일 또는 비밀번호가 올바르지 않습니다.',
+      );
+    }
+    return super.handleRequest(err, user, info, context, status);
+  }
+}

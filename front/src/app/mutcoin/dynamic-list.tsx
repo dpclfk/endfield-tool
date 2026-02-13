@@ -16,8 +16,8 @@ export default function DynamicList({ listId }: { listId: number }) {
   const [allData, setAllData] = useAtom(tradeAtom);
   const [isMounted, setIsMounted] = useState(false);
   const inputClassName =
-    "px-2 py-1 w-full bg-zinc-100 dark:bg-gray-800 text-end rounded-sm";
-  const inputParentClassName = "border-2 col-span-2 rounded-sm mx-1";
+    "px-2 py-1 w-full bg-zinc-50 dark:bg-gray-800 text-end rounded-sm outline-none ring focus:ring-blue-300 dark:focus:ring-blue-700 dark:ring-gray-600";
+  const inputParentClassName = "col-span-2 rounded-sm mx-1";
 
   // 브라우저에 마운트된 직후에만 true가 됨
   useEffect(() => {
